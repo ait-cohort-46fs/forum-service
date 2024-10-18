@@ -5,6 +5,7 @@ import ait.cohort46.post.dto.NewCommentDto;
 import ait.cohort46.post.dto.NewPostDto;
 import ait.cohort46.post.dto.PostDto;
 import ait.cohort46.post.dto.exception.PostNotFoundException;
+import ait.cohort46.post.model.Comment;
 import ait.cohort46.post.model.Post;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -62,12 +63,18 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto addComment(String id, String author, NewCommentDto newCommentDto) {
-        return null;
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        Comment comment = new Comment(author, newCommentDto.getMessage());
+        post.addComment(comment);
+        post = postRepository.save(post);
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public void addLike(String id) {
-
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        post.addLike();
+        postRepository.save(post);
     }
 
     @Override
