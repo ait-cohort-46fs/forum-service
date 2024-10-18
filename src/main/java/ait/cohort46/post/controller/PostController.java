@@ -7,6 +7,7 @@ import ait.cohort46.post.dto.NewCommentDto;
 import ait.cohort46.post.dto.NewPostDto;
 import ait.cohort46.post.dto.PostDto;
 import ait.cohort46.post.service.PostService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
