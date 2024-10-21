@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 
 @RestController
 @RequestMapping("/account")
@@ -22,9 +24,8 @@ public class UserAccountController {
 	}
 
 	@PostMapping("/login")
-	public UserDto login() {
-		// TODO login method
-		return null;
+	public UserDto login(Principal principal) {
+		return userAccountService.getUser(principal.getName());
 	}
 
 	@GetMapping("/user/{login}")
@@ -54,7 +55,7 @@ public class UserAccountController {
 
 	@PatchMapping("/password")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void changePassword() {
-		// TODO changePassword method
+	public void changePassword(Principal principal, @RequestHeader("X-Password") String newPassword) {
+		userAccountService.changePassword(principal.getName(), newPassword);
 	}
 }
