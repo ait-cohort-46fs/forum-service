@@ -37,12 +37,12 @@ public class UserAccountController {
 		return userAccountService.removeUser(login);
 	}
 
-	@PutMapping("/user/{login}")
+	@PatchMapping("/user/{login}")
 	public UserDto updateUser(@PathVariable String login, @RequestBody UserEditDto userEditDto) {
 		return userAccountService.updateUser(login, userEditDto);
 	}
 
-	@PutMapping("/user/{login}/role/{role}")
+	@PatchMapping("/user/{login}/role/{role}")
 	public RolesDto addRole(@PathVariable String login, @PathVariable String role) {
 		return userAccountService.changeRolesList(login, role, true);
 	}
@@ -52,7 +52,7 @@ public class UserAccountController {
 		return userAccountService.changeRolesList(login, role, false);
 	}
 
-	@PutMapping("/password")
+	@PatchMapping("/password")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void changePassword() {
 		// TODO changePassword method
