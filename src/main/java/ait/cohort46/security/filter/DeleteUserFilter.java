@@ -8,14 +8,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Component
+@Order(40)
 @RequiredArgsConstructor
-@Order(20)
-public class AdminManagingRolesFilter implements Filter {
+public class DeleteUserFilter implements Filter {
     private final UserAccountRepository repository;
 
     @Override
@@ -24,14 +25,19 @@ public class AdminManagingRolesFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) resp;
         if (checkEndpoint(request.getMethod(), request.getServletPath())) {
             UserAccount user = repository.findById(request.getUserPrincipal().getName()).get();
-            if(!user.getRoles().contains(Role.ADMINISTRATOR)){
+            String[] arr = request.getServletPath().split("/");
+            String owner = arr[arr.length - 1];
+            if (!(user.getRoles().contains(Role.ADMINISTRATOR) || user.getLogin().equalsIgnoreCase(owner))) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
         }
         chain.doFilter(request, response);
     }
+
     private boolean checkEndpoint(String method, String path) {
-        return path.matches("/account/user/\\w+/role/\\w+");
+        return HttpMethod.DELETE.matches(method) && path.matches("/account/user/\\w+");
     }
+
 }
+
