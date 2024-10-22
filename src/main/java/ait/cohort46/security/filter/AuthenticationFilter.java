@@ -27,7 +27,7 @@ public class AuthenticationFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
-        if(checkEndpoint(request.getMethod(), request.getServletPath())) {
+        if (checkEndpoint(request.getMethod(), request.getServletPath())) {
             try {
                 String[] credentials = getCredentials(request.getHeader("Authorization"));
                 UserAccount userAccount = repository.findById(credentials[0]).orElseThrow(RuntimeException::new);
@@ -44,7 +44,10 @@ public class AuthenticationFilter implements Filter {
     }
 
     private boolean checkEndpoint(String method, String path) {
-        return !(HttpMethod.POST.matches(method) && path.matches("/account/register"));
+        return !(
+                (HttpMethod.POST.matches(method) && path.matches("/account/register"))
+                        || (HttpMethod.GET.matches(method) && path.matches("/forum/posts.+"))
+        );
     }
 
     private String[] getCredentials(String authorization) {
