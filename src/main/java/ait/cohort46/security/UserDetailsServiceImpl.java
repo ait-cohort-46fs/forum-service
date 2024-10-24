@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -22,6 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .stream()
                 .map(r -> "ROLE_" + r.name())
                 .toArray(String[]::new);
-        return new User(username, userAccount.getPassword(), AuthorityUtils.createAuthorityList(roles));
+        boolean passwordNonExpired = userAccount.getPasswordExpDate().isAfter(LocalDate.now());
+        return new UserProfile(username, userAccount.getPassword(), AuthorityUtils.createAuthorityList(roles), passwordNonExpired);
     }
 }

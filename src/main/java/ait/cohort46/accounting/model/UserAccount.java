@@ -1,5 +1,6 @@
 package ait.cohort46.accounting.model;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,14 +16,16 @@ import lombok.Setter;
 @Document(collection = "users")
 public class UserAccount {
 	@Id
-	String login;
+	private String login;
 	@Setter
-	String firstName;
+	private String firstName;
 	@Setter
-	String lastName;
+	private String lastName;
 	@Setter
-	String password;
-	Set<Role> roles;
+	private String password;
+	private Set<Role> roles;
+	@Setter
+	private LocalDate passwordExpDate;
 
 	public UserAccount() {
 		roles = new HashSet<>();

@@ -10,17 +10,20 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
     private final CustomWebSecurity webSecurity;
+    private final ExpiredPasswordFilter expiredPasswordFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.httpBasic(Customizer.withDefaults());
         http.csrf(csrf -> csrf.disable());
+        http.addFilterBefore(expiredPasswordFilter, AuthorizationFilter.class);
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/account/register", "/forum/posts/**")
                     .permitAll()
